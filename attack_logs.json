@@ -178,5 +178,35 @@
     "password_length": 3,
     "is_common_username": false,
     "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-19T15:06:34.130283",
+    "ip": "127.0.0.1",
+    "username": "admin",
+    "password": "7283",
+    "username_length": 5,
+    "password_length": 4,
+    "is_common_username": true,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-19T15:06:37.981458",
+    "ip": "127.0.0.1",
+    "username": "admin",
+    "password": "jU8192",
+    "username_length": 5,
+    "password_length": 6,
+    "is_common_username": true,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-19T15:06:39.494829",
+    "ip": "127.0.0.1",
+    "username": "admin",
+    "password": "11111",
+    "username_length": 5,
+    "password_length": 5,
+    "is_common_username": true,
+    "is_common_password": false
   }
 ]

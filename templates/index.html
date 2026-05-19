@@ -3,62 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Honeypot Dashboard</title>
+    <title>ThreatWatch — Honeypot Monitor</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', sans-serif; padding: 20px; }
-        h1 { color: #58a6ff; margin-bottom: 20px; font-size: 24px; }
-        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
-        .stat-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; text-align: center; }
-        .stat-card h2 { font-size: 36px; color: #58a6ff; }
-        .stat-card p { color: #8b949e; font-size: 14px; margin-top: 5px; }
-        .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-        .chart-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; }
-        .chart-card h3 { color: #58a6ff; margin-bottom: 15px; }
-        .table-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
-        .table-card h3 { color: #58a6ff; margin-bottom: 15px; }
+        body { background: #060a0f; color: #cdd9e5; font-family: 'Courier New', monospace; font-size: 13px; }
+        
+        header { background: #0d1117; border-bottom: 1px solid #00ff9080; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
+        .logo { color: #00ff90; font-size: 16px; font-weight: bold; letter-spacing: 2px; }
+        .logo span { color: #cdd9e5; }
+        .status { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #8b949e; }
+        .dot { width: 8px; height: 8px; background: #00ff90; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .main { padding: 20px 24px; }
+
+        .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .metric { background: #0d1117; border: 1px solid #21262d; border-left: 3px solid #00ff90; padding: 16px; }
+        .metric.danger { border-left-color: #ff4444; }
+        .metric.warning { border-left-color: #ffaa00; }
+        .metric.info { border-left-color: #58a6ff; }
+        .metric-label { font-size: 11px; color: #8b949e; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+        .metric-value { font-size: 32px; color: #00ff90; font-weight: bold; }
+        .metric.danger .metric-value { color: #ff4444; }
+        .metric.warning .metric-value { color: #ffaa00; }
+        .metric.info .metric-value { color: #58a6ff; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .panel { background: #0d1117; border: 1px solid #21262d; padding: 16px; }
+        .panel-header { font-size: 11px; color: #00ff90; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #21262d; }
+
+        .table-panel { background: #0d1117; border: 1px solid #21262d; padding: 16px; }
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 10px; color: #8b949e; border-bottom: 1px solid #30363d; font-size: 13px; }
-        td { padding: 10px; border-bottom: 1px solid #21262d; font-size: 14px; }
-        tr:last-child td { border-bottom: none; }
-        .bot-tag { background: #da3633; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
-        .human-tag { background: #238636; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
-        .refresh { background: #238636; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; }
+        th { font-size: 10px; color: #8b949e; letter-spacing: 1px; text-transform: uppercase; padding: 8px 12px; text-align: left; border-bottom: 1px solid #21262d; }
+        td { padding: 8px 12px; border-bottom: 1px solid #0d1117; font-size: 12px; font-family: 'Courier New', monospace; }
+        tr:hover td { background: #161b22; }
+        .tag { padding: 2px 8px; font-size: 10px; letter-spacing: 1px; font-weight: bold; }
+        .tag.bot { background: #ff444420; color: #ff4444; border: 1px solid #ff444460; }
+        .tag.human { background: #00ff9020; color: #00ff90; border: 1px solid #00ff9060; }
+
+        .threat-bar { height: 4px; background: #21262d; margin-top: 4px; }
+        .threat-fill { height: 100%; background: #ff4444; transition: width 0.3s; }
+
+        .refresh-btn { background: transparent; border: 1px solid #00ff9060; color: #00ff90; padding: 6px 14px; font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; }
+        .refresh-btn:hover { background: #00ff9020; }
+
+        .ticker { background: #0a0f0a; border-top: 1px solid #00ff9030; padding: 6px 24px; font-size: 11px; color: #00ff9080; letter-spacing: 1px; white-space: nowrap; overflow: hidden; }
     </style>
 </head>
 <body>
-    <h1> Honeypot Attack Dashboard</h1>
-    <button class="refresh" onclick="loadData()">Refresh</button>
-
-    <div class="stats">
-        <div class="stat-card"><h2 id="total">-</h2><p>Total Attacks</p></div>
-        <div class="stat-card"><h2 id="bots">-</h2><p>Bots Detected</p></div>
-        <div class="stat-card"><h2 id="humans">-</h2><p>Human Attackers</p></div>
-        <div class="stat-card"><h2 id="ips">-</h2><p>Unique IPs</p></div>
-    </div>
-
-    <div class="charts">
-        <div class="chart-card">
-            <h3>Bot vs Human</h3>
-            <canvas id="botChart"></canvas>
+    <header>
+        <div class="logo">THREAT<span>WATCH</span> // HONEYPOT MONITOR v1.0</div>
+        <div class="status">
+            <div class="dot"></div>
+            LIVE MONITORING
+            <span id="lastUpdate" style="margin-left:12px;">--:--:--</span>
+            <button class="refresh-btn" onclick="loadData()" style="margin-left:16px;">REFRESH</button>
         </div>
-        <div class="chart-card">
-            <h3>Top Usernames Tried</h3>
-            <canvas id="usernameChart"></canvas>
+    </header>
+
+    <div class="main">
+        <div class="metrics">
+            <div class="metric info">
+                <div class="metric-label">Total Attempts</div>
+                <div class="metric-value" id="total">--</div>
+            </div>
+            <div class="metric danger">
+                <div class="metric-label">Bots Detected</div>
+                <div class="metric-value" id="bots">--</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Human Attackers</div>
+                <div class="metric-value" id="humans">--</div>
+            </div>
+            <div class="metric warning">
+                <div class="metric-label">Unique IPs</div>
+                <div class="metric-value" id="ips">--</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="panel">
+                <div class="panel-header">Threat Classification</div>
+                <canvas id="botChart" height="180"></canvas>
+            </div>
+            <div class="panel">
+                <div class="panel-header">Top Usernames Targeted</div>
+                <canvas id="usernameChart" height="180"></canvas>
+            </div>
+        </div>
+
+        <div class="table-panel">
+            <div class="panel-header" style="display:flex; justify-content:space-between;">
+                <span>Live Attack Feed</span>
+                <span id="feedCount" style="color:#8b949e; font-size:10px;"></span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Source IP</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Threat Type</th>
+                    </tr>
+                </thead>
+                <tbody id="attackTable"></tbody>
+            </table>
         </div>
     </div>
 
-    <div class="table-card">
-        <h3>Recent Attacks</h3>
-        <table>
-            <thead><tr><th>Time</th><th>IP</th><th>Username</th><th>Password</th><th>Type</th></tr></thead>
-            <tbody id="attackTable"></tbody>
-        </table>
-    </div>
+    <div class="ticker" id="ticker">SYSTEM ONLINE // MONITORING PORT 2222 // AWAITING CONNECTIONS...</div>
 
     <script>
         let botChart, usernameChart;
+
+        Chart.defaults.color = '#8b949e';
+        Chart.defaults.borderColor = '#21262d';
 
         async function loadData() {
             const [statsRes, attacksRes] = await Promise.all([
@@ -72,19 +133,19 @@
             document.getElementById('bots').textContent = stats.bots || 0;
             document.getElementById('humans').textContent = stats.humans || 0;
             document.getElementById('ips').textContent = stats.unique_ips || 0;
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+            document.getElementById('feedCount').textContent = `SHOWING LAST ${Math.min(attacks.length, 20)} OF ${attacks.length} EVENTS`;
 
-            // bot vs human chart
             if (botChart) botChart.destroy();
             botChart = new Chart(document.getElementById('botChart'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Bots', 'Humans'],
-                    datasets: [{ data: [stats.bots || 0, stats.humans || 0], backgroundColor: ['#da3633', '#238636'] }]
+                    labels: ['BOTS', 'HUMANS'],
+                    datasets: [{ data: [stats.bots || 0, stats.humans || 0], backgroundColor: ['#ff4444', '#00ff90'], borderWidth: 0 }]
                 },
-                options: { plugins: { legend: { labels: { color: '#e6edf3' } } } }
+                options: { plugins: { legend: { labels: { color: '#8b949e', font: { family: 'Courier New', size: 11 } } } }, cutout: '70%' }
             });
 
-            // username chart
             if (usernameChart) usernameChart.destroy();
             const usernames = (stats.top_usernames || []).map(u => u[0]);
             const counts = (stats.top_usernames || []).map(u => u[1]);
@@ -92,28 +153,36 @@
                 type: 'bar',
                 data: {
                     labels: usernames,
-                    datasets: [{ label: 'Attempts', data: counts, backgroundColor: '#58a6ff' }]
+                    datasets: [{ data: counts, backgroundColor: '#58a6ff40', borderColor: '#58a6ff', borderWidth: 1 }]
                 },
                 options: {
-                    plugins: { legend: { labels: { color: '#e6edf3' } } },
-                    scales: { x: { ticks: { color: '#8b949e' } }, y: { ticks: { color: '#8b949e' } } }
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#8b949e', font: { family: 'Courier New', size: 10 } }, grid: { color: '#21262d' } },
+                        y: { ticks: { color: '#8b949e', font: { family: 'Courier New', size: 10 } }, grid: { color: '#21262d' } }
+                    }
                 }
             });
 
-            // attack table
             const tbody = document.getElementById('attackTable');
             tbody.innerHTML = '';
             attacks.slice(-20).reverse().forEach(a => {
                 const isBot = a.is_common_username && a.is_common_password;
                 const time = new Date(a.timestamp).toLocaleTimeString();
                 tbody.innerHTML += `<tr>
-                    <td>${time}</td>
-                    <td>${a.ip}</td>
-                    <td>${a.username}</td>
-                    <td>${a.password}</td>
-                    <td><span class="${isBot ? 'bot-tag' : 'human-tag'}">${isBot ? 'BOT' : 'HUMAN'}</span></td>
+                    <td style="color:#8b949e">${time}</td>
+                    <td style="color:#ffaa00">${a.ip}</td>
+                    <td style="color:#cdd9e5">${a.username}</td>
+                    <td style="color:#8b949e">${a.password}</td>
+                    <td><span class="tag ${isBot ? 'bot' : 'human'}">${isBot ? 'BOT' : 'HUMAN'}</span></td>
                 </tr>`;
             });
+
+            if (attacks.length > 0) {
+                const last = attacks[attacks.length - 1];
+                document.getElementById('ticker').textContent = 
+                    `LAST EVENT: ${new Date(last.timestamp).toLocaleTimeString()} // IP: ${last.ip} // USER: ${last.username} // TOTAL ATTEMPTS: ${stats.total} // BOTS: ${stats.bots} // HUMANS: ${stats.humans}`;
+            }
         }
 
         loadData();
