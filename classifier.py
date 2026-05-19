@@ -16,3 +16,11 @@ def add_features(df):
     df['password_has_numbers'] = df['password'].apply(lambda x: int(any(c.isdigit() for c in x)))
     df['password_has_special'] = df['password'].apply(lambda x: int(any(not c.isalnum() for c in x)))
     return df
+
+def label_data(df):
+    # bots mostly common username and short/common password and fast attempts
+    df['is_bot'] = (
+        (df['is_common_username'] == True) & 
+        (df['is_common_password'] == True)
+    ).astype(int)
+    return df
