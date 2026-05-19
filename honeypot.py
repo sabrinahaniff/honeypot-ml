@@ -36,7 +36,6 @@ class FakeSSHServer(paramiko.ServerInterface):
 def handle_connection(client_socket, client_ip):
     transport = paramiko.Transport(client_socket)
     
-    # generate a fake server key
     host_key = paramiko.RSAKey.generate(2048)
     transport.add_server_key(host_key)
     
@@ -44,6 +43,9 @@ def handle_connection(client_socket, client_ip):
     
     try:
         transport.start_server(server=server)
+        channel = transport.accept(20)
+        if channel:
+            channel.close()
     except Exception as e:
         print(f"[ERROR] {e}")
     finally:
