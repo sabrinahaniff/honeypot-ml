@@ -3,6 +3,7 @@ import threading
 import paramiko
 import logging
 from datetime import datetime
+from logger import log_attempt
 
 # setup logging
 logging.basicConfig(
