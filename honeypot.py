@@ -5,43 +5,26 @@ import logging
 from datetime import datetime
 from logger import log_attempt
 
-# setup logging
-logging.basicConfig(
-    filename='attack_logs.json',
-    level=logging.INFO,
-    format='%(message)s'
-)
-
 HOST = '0.0.0.0'
-PORT = 2222  # fake SSH port
+PORT = 2222
 
 class FakeSSHServer(paramiko.ServerInterface):
     def __init__(self, client_ip):
         self.client_ip = client_ip
 
     def check_auth_password(self, username, password):
-        # log every login attempt
-        log_entry = {
-            "timestamp": datetime.now().isoformat(),
-            "ip": self.client_ip,
-            "username": username,
-            "password": password
-        }
-        logging.info(str(log_entry))
-        print(f"[ATTACK] {self.client_ip} tried {username}:{password}")
-        return paramiko.AUTH_FAILED  # always fail
+        entry = log_attempt(self.client_ip, username, password)
+        print(f"[ATTACK] {self.client_ip} tried {entry['username']}:{entry['password']} | common_user={entry['is_common_username']} | common_pass={entry['is_common_password']}")
+        return paramiko.AUTH_FAILED
 
     def get_allowed_auths(self, username):
         return 'password'
-    
+
 def handle_connection(client_socket, client_ip):
     transport = paramiko.Transport(client_socket)
-    
     host_key = paramiko.RSAKey.generate(2048)
     transport.add_server_key(host_key)
-    
     server = FakeSSHServer(client_ip)
-    
     try:
         transport.start_server(server=server)
         channel = transport.accept(20)
@@ -58,7 +41,6 @@ def start_honeypot():
     sock.bind((HOST, PORT))
     sock.listen(100)
     print(f"[*] Honeypot listening on port {PORT}...")
-    
     while True:
         client, addr = sock.accept()
         client_ip = addr[0]
