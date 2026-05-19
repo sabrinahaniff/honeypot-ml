@@ -28,5 +28,155 @@
     "password_length": 11,
     "is_common_username": true,
     "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T22:58:46.218253",
+    "ip": "127.0.0.1",
+    "username": "admin",
+    "password": "password123",
+    "username_length": 5,
+    "password_length": 11,
+    "is_common_username": true,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T22:58:47.716243",
+    "ip": "127.0.0.1",
+    "username": "admin",
+    "password": "123",
+    "username_length": 5,
+    "password_length": 3,
+    "is_common_username": true,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T22:58:49.501244",
+    "ip": "127.0.0.1",
+    "username": "admin",
+    "password": "pass123",
+    "username_length": 5,
+    "password_length": 7,
+    "is_common_username": true,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:03.152476",
+    "ip": "127.0.0.1",
+    "username": "admin",
+    "password": "MyP@ssw0rd!",
+    "username_length": 5,
+    "password_length": 11,
+    "is_common_username": true,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:07.516873",
+    "ip": "127.0.0.1",
+    "username": "admin",
+    "password": "89Yur",
+    "username_length": 5,
+    "password_length": 5,
+    "is_common_username": true,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:09.842195",
+    "ip": "127.0.0.1",
+    "username": "admin",
+    "password": "123456",
+    "username_length": 5,
+    "password_length": 6,
+    "is_common_username": true,
+    "is_common_password": true
+  },
+  {
+    "timestamp": "2026-05-18T23:03:13.116243",
+    "ip": "127.0.0.1",
+    "username": "john_smith",
+    "password": "oasswird245",
+    "username_length": 10,
+    "password_length": 11,
+    "is_common_username": false,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:19.827984",
+    "ip": "127.0.0.1",
+    "username": "john_smith",
+    "password": "MyP@ssw0rd!",
+    "username_length": 10,
+    "password_length": 11,
+    "is_common_username": false,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:22.137869",
+    "ip": "127.0.0.1",
+    "username": "john_smith",
+    "password": "jsk!",
+    "username_length": 10,
+    "password_length": 4,
+    "is_common_username": false,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:25.051630",
+    "ip": "127.0.0.1",
+    "username": "sabrina",
+    "password": "2345",
+    "username_length": 7,
+    "password_length": 4,
+    "is_common_username": false,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:28.313823",
+    "ip": "127.0.0.1",
+    "username": "sabrina",
+    "password": "password2134",
+    "username_length": 7,
+    "password_length": 12,
+    "is_common_username": false,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:29.882306",
+    "ip": "127.0.0.1",
+    "username": "sabrina",
+    "password": "12345",
+    "username_length": 7,
+    "password_length": 5,
+    "is_common_username": false,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:36.042919",
+    "ip": "127.0.0.1",
+    "username": "developer",
+    "password": "myPassword",
+    "username_length": 9,
+    "password_length": 10,
+    "is_common_username": false,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:38.937266",
+    "ip": "127.0.0.1",
+    "username": "developer",
+    "password": "lY819",
+    "username_length": 9,
+    "password_length": 5,
+    "is_common_username": false,
+    "is_common_password": false
+  },
+  {
+    "timestamp": "2026-05-18T23:03:40.199238",
+    "ip": "127.0.0.1",
+    "username": "developer",
+    "password": "!24",
+    "username_length": 9,
+    "password_length": 3,
+    "is_common_username": false,
+    "is_common_password": false
   }
 ]
